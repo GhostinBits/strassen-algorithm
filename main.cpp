@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 using std::cout;
 using std::endl;
@@ -14,7 +15,7 @@ void submatrix(double * result, const double * original, int y, int x,  // Creat
     }
 }
 
-void add(double * result, double * matrix_1, int y, int x, double * matrix_2) {
+void add(double * result, const double * matrix_1, int y, int x, const double * matrix_2) {
     for (int i = 0; i < y; i++) {
         for (int j = 0; j < x; j++) {
             result[i * x + j] = matrix_1[i * x + j] + matrix_2[i * x + j];
@@ -22,7 +23,7 @@ void add(double * result, double * matrix_1, int y, int x, double * matrix_2) {
     }
 }
 
-void sub(double * result, double * matrix_1, int y, int x, double * matrix_2) {
+void sub(double * result, const double * matrix_1, int y, int x, const double * matrix_2) {
     for (int i = 0; i < y; i++) {
         for (int j = 0; j < x; j++) {
             result[i * x + j] = matrix_1[i * x + j] - matrix_2[i * x + j];
@@ -31,9 +32,10 @@ void sub(double * result, double * matrix_1, int y, int x, double * matrix_2) {
 }
 
 
-void mul(double * result, double * matrix_1, int y_1, int x_1, double * matrix_2, int y_2, int x_2) {
+void mul(double * result, const double * matrix_1, int y_1, int x_1, const double * matrix_2, int y_2, int x_2) {
     for (int i = 0; i < y_1; i++) {
         for (int j = 0; j < x_2; j++) {
+            result[i * x_2 + j] = 0;
             for (int k = 0; k < x_1; k++) {
                 result[i * x_2 + j] += matrix_1[i * x_1 + k] * matrix_2[k * x_2 + j];
             }
@@ -51,7 +53,7 @@ void print_matrix(double * matrix, int y, int x) {
 }
 
 
-void strassen(double * result, double * matrix_1, int y_1, int x_1, double * matrix_2, int y_2, int x_2) {
+void strassen(double * result, const double * matrix_1, int y_1, int x_1, const double * matrix_2, int y_2, int x_2) {
     double A11[(y_1 / 2 * (x_1 / 2))];
     double A12[(y_1 / 2 * (x_1 / 2))];
     double A21[(y_1 / 2 * (x_1 / 2))];
@@ -153,16 +155,29 @@ void strassen(double * result, double * matrix_1, int y_1, int x_1, double * mat
 
 
 int main() {
-    double A[4];
-    double B[4];
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 2; j++) {
-            A[i * 2 + j] = 1;
-            B[i * 2 + j] = 1;
+    double A[100];
+    double B[100];
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            A[i * 10 + j] = 1;
+            B[i * 10 + j] = 1;
         }
     }
-    double * C = new double[4];
-    strassen(C, A, 2, 2, B, 2, 2);
-    print_matrix(C, 2, 2);
+    auto * C = new double[100];
+    strassen(C, A, 10, 10, B, 10, 10);
+    print_matrix(C, 10, 10);
+
+    double D[400];
+    double E[400];
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            D[i * 10 + j] = M_PI;
+            E[i * 10 + j] = exp(1);
+        }
+    }
+    auto * F = new double[400];
+    strassen(F, D, 20, 20, E, 20, 20);
+    print_matrix(F, 20, 20);
+
     return 0;
 }
